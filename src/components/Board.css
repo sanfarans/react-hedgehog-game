@@ -1,0 +1,11 @@
+.Board {
+    margin-left: auto;
+    margin-right: auto;
+    border: 5px solid black;
+}
+
+.Board td {
+    border: 1px solid black;
+    width: 50px;
+    line-height: 50px;
+}
