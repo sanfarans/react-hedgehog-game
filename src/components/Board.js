@@ -1,12 +1,10 @@
 import "./Board.css"
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import Tile from "./Tile";
 import { BOARD_SIZE } from "../reducers/boardReducer";
 
-
 export default function Board() {
-    const board = useSelector((state) => state.board);
-    const dispatch = useDispatch();
+    const board = useSelector((state) => state.board.board);
 
     let rowCnt = -1;
     let colCnt = -1;
