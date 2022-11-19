@@ -19,11 +19,23 @@ const generateInitialPlayer = (n = BOARD_SIZE) => {
     return playerHead
 }
 
-const generateBoardState = (playerHead, n = BOARD_SIZE) => {
+const getNewPointLocation = (board, n = BOARD_SIZE) => {
+    let possiblePlaces = [];
+    for (let i = 0; i < n; ++i)
+        for (let j = 0; j < n; ++j)
+            if (board[i][j] === TileTypes.EMPTY)
+                possiblePlaces.push({x: i, y: j})
+    if (possiblePlaces.length === 0) {
+        console.log('wow u won this is so unexpected that i didnt take time to implement the congrats screen so this console message is all u get')
+        return
+    }
+    return possiblePlaces[Math.floor(Math.random()*possiblePlaces.length)];
+}
+
+const generateBoardState = (playerHead, pointLocation, n = BOARD_SIZE) => {
     let board = [];
     for (let i = 0; i < n; ++i)
         board.push(new Array(n).fill(TileTypes.EMPTY))
-    let mid = Math.floor((n-1)/2);
     board[playerHead.x][playerHead.y] = TileTypes.HEAD
     let playerPart = playerHead.next;
     while (playerPart != null) {
@@ -32,9 +44,11 @@ const generateBoardState = (playerHead, n = BOARD_SIZE) => {
         )
         playerPart = playerPart.next;
     }
-
-    board[mid][8] = TileTypes.POINT
     return board;
+}
+
+const placePoint = (board, pointLocation) => {
+    board[pointLocation.x][pointLocation.y] = TileTypes.POINT;
 }
 
 
@@ -54,6 +68,7 @@ export const GameStage = {
 const statePostMove = (currentState) => {
     const currentPlayerHead = currentState.playerHead;
     const facing = currentState.facing;
+    let pointLocation = currentState.pointLocation;
 
     let nextX = currentPlayerHead.x + facing.x;
     let nextY = currentPlayerHead.y + facing.y;
@@ -61,36 +76,52 @@ const statePostMove = (currentState) => {
     // check if player crashed into the wall
     if (Math.min(nextX, nextY) < 0 || Math.max(nextX, nextY) >= BOARD_SIZE)
         return {...currentState, gameStage: GameStage.LOST}
+    
+    const pointCollected = (
+        pointLocation.x === nextX && pointLocation.y === nextY
+    )
 
     // update player position
     const playerHead = new PlayerPart(nextX, nextY, currentPlayerHead);
     let playerTail = playerHead;
     while (playerTail.next.next != null)
         playerTail = playerTail.next;
-    playerTail.next = null;
-
+    if (!pointCollected)
+        playerTail.next = null;
+    
     // check if player self crashed
     let playerPart = playerHead.next;
     while (playerPart) {
         if (playerPart.x === playerHead.x && playerPart.y === playerHead.y)
-            return {...currentState, board: generateBoardState(playerHead),
-                    playerHead: playerHead, gameStage: GameStage.LOST}
-        playerPart = playerPart.next
-    }
-
+        return {...currentState, board: generateBoardState(playerHead),
+            playerHead: playerHead, gameStage: GameStage.LOST}
+            playerPart = playerPart.next
+        }
+            
+    let board = generateBoardState(playerHead)
+    if (pointCollected)
+        pointLocation = getNewPointLocation(board);
+    placePoint(board, pointLocation)
     return {
         ...currentState,
-        board: generateBoardState(playerHead),
+        board: board,
         playerHead: playerHead,
+        pointLocation: pointLocation,
+        points: currentState.points + pointCollected,
         directionChosen: false
     }
 }
 
 const getInitialState = () => {
     const playerHead = generateInitialPlayer();
+    const pointLocation = {x: playerHead.x, y: playerHead.y + 3}
+    const board = generateBoardState(playerHead, pointLocation)
+    placePoint(board, pointLocation);
     return {
-        board: generateBoardState(playerHead),
+        board: board,
         playerHead: playerHead,
+        pointLocation: pointLocation,
+        points: 0,
         facing: Direction.RIGHT,
         directionChosen: false,
         gameStage: GameStage.MENU

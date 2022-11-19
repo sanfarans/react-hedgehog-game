@@ -5,6 +5,7 @@ import { BOARD_SIZE } from "../reducers/gameReducer";
 
 export default function Board() {
     const board = useSelector((state) => state.game.board);
+    const points = useSelector((state) => state.game.points)
 
     let rowCnt = -1;
     let colCnt = -1;
@@ -19,10 +20,13 @@ export default function Board() {
     ))
 
     return (
-        <table className="Board">
-            <tbody>
-                {htmlBoard}
-            </tbody>
-        </table>
+        <div>
+            <h2>Points: {points}</h2>
+            <table className="Board">
+                <tbody>
+                    {htmlBoard}
+                </tbody>
+            </table>
+        </div>
     )
 }

@@ -17,7 +17,7 @@ export default function GameLogic() {
         const id = setInterval(() => {
             if (gameStage === GameStage.PLAY)
                 dispatch(move())
-        }, 1000);
+        }, 500);
         const onKeyDown = (e) => {
             if (gameStage !== GameStage.PLAY)
                 return
