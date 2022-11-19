@@ -53,10 +53,10 @@ const placePoint = (board, pointLocation) => {
 
 
 export const Direction = {
-    RIGHT: {x: 0, y: 1},
-    LEFT: {x: 0, y: -1},
-    UP: {x: -1, y: 0},
-    DOWN: {x: 1, y: 0}
+    RIGHT: {x: 0, y: 1, type: 'horizontal'},
+    LEFT: {x: 0, y: -1, type: 'horizontal'},
+    UP: {x: -1, y: 0, type: 'vertical'},
+    DOWN: {x: 1, y: 0, type: 'vertical'}
 }
 
 export const GameStage = {
@@ -65,9 +65,17 @@ export const GameStage = {
     LOST: 2
 }
 
+const getNewFacing = (facing, moveQueue) => {
+    while (moveQueue.length > 0 && moveQueue[0].type === facing.type)
+        moveQueue.shift()
+    if (moveQueue.length > 0)
+        facing = moveQueue.shift();
+    return facing
+}
+
 const statePostMove = (currentState) => {
     const currentPlayerHead = currentState.playerHead;
-    const facing = currentState.facing;
+    const facing = getNewFacing(currentState.facing, currentState.moveQueue);
     let pointLocation = currentState.pointLocation;
 
     let nextX = currentPlayerHead.x + facing.x;
@@ -106,6 +114,7 @@ const statePostMove = (currentState) => {
         ...currentState,
         board: board,
         playerHead: playerHead,
+        facing: facing,
         pointLocation: pointLocation,
         points: currentState.points + pointCollected,
         directionChosen: false
@@ -123,7 +132,7 @@ const getInitialState = () => {
         pointLocation: pointLocation,
         points: 0,
         facing: Direction.RIGHT,
-        directionChosen: false,
+        moveQueue: [],
         gameStage: GameStage.MENU
     }
 }
@@ -140,9 +149,11 @@ export default function gameReducer(state = getInitialState(), action) {
                     return {...state, gameStage: action.payload.stage}
             }
         case "board/turn":
-            if (state.directionChosen)
+            if (state.moveQueue.length > 5)
                 return state
-            state = {...state, facing: action.payload.direction, directionChosen: true}
+            let newMoveQueue = state.moveQueue
+            newMoveQueue.push(action.payload.direction)
+            state = {...state, moveQueue: newMoveQueue}
             return state
         case "board/move":
             state = statePostMove(state)

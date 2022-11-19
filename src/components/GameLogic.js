@@ -7,10 +7,7 @@ import { GameStage } from '../reducers/gameReducer';
 import GameMenu from './GameMenu';
 
 export default function GameLogic() {
-
-    const currentDirection = useSelector((state) => state.game.facing)
     const gameStage = useSelector((state) => state.game.gameStage)
-
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -23,23 +20,15 @@ export default function GameLogic() {
                 return
             switch(e.key) {
                 case "ArrowRight":
-                    if (currentDirection === Direction.LEFT || currentDirection === Direction.RIGHT)
-                        return
                     dispatch(turn(Direction.RIGHT))
                     break;
                 case "ArrowLeft":
-                    if (currentDirection === Direction.LEFT || currentDirection === Direction.RIGHT)
-                        return
                     dispatch(turn(Direction.LEFT))
                     break;
                 case "ArrowUp":
-                    if (currentDirection === Direction.DOWN || currentDirection === Direction.UP)
-                        return
                     dispatch(turn(Direction.UP))
                     break;
                 case "ArrowDown":
-                    if (currentDirection === Direction.DOWN || currentDirection === Direction.UP)
-                        return
                     dispatch(turn(Direction.DOWN))
                     break;
                 default:
