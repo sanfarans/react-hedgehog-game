@@ -2,10 +2,27 @@
     margin-left: auto;
     margin-right: auto;
     border: 5px solid black;
+    border-collapse: collapse;
 }
 
 .Board td {
-    border: 1px solid black;
-    width: 50px;
-    line-height: 50px;
+    padding: 0;
+}
+
+.Board td img {
+    display: block;
+    width: 60px;
+    height: 60px;
+}
+
+.rotate90 {
+    transform: rotate(90deg);
+}
+
+.rotate180 {
+    transform: rotate(180deg);
+}
+
+.rotate270 {
+    transform: rotate(270deg);
 }

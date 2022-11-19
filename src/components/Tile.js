@@ -1,3 +1,11 @@
+import background from '../assets/background.png'
+import point from '../assets/point.png'
+import head from '../assets/head.png'
+import body from '../assets/body.png'
+import bodyTurn from '../assets/turn.png'
+import tail from '../assets/tail.png'
+
+
 export const TileTypes = {
     EMPTY: 0,
     POINT: 1,
@@ -14,48 +22,80 @@ export const TileTypes = {
     BODY_RIGHT_UP: 10,
     BODY_RIGHT_DOWN: 11,
 
-    TAIL_HORIZONTAL: 12,
-    TAIL_VERTICAL: 13
+    TAIL_UP: 12,
+    TAIL_DOWN: 13,
+    TAIL_LEFT: 14,
+    TAIL_RIGHT: 15
 };
 
-const tileTypeToCellContent = (type) => {
+const tileTypeToImageSrc = (type) => {
     switch(type) {
         case TileTypes.POINT:
-            return "o";
+            return point;
         case TileTypes.HEAD_UP:
-            return "╿";
         case TileTypes.HEAD_DOWN:
-            return "╽";
         case TileTypes.HEAD_LEFT:
-            return "╾";
         case TileTypes.HEAD_RIGHT:
-            return "╼";
+            return head;
         case TileTypes.BODY_HORIZONTAL:
-            return "═";
         case TileTypes.BODY_VERTICAL:
-            return "║";
+            return body;
         case TileTypes.BODY_LEFT_UP:
-            return "╝";
         case TileTypes.BODY_LEFT_DOWN:
-            return "╗";
         case TileTypes.BODY_RIGHT_UP:
-            return "╚";
         case TileTypes.BODY_RIGHT_DOWN:
-            return "╔"
-        case TileTypes.TAIL_HORIZONTAL:
-            return "┄";
-        case TileTypes.TAIL_VERTICAL:
-            return "┊";
+            return bodyTurn;
+        case TileTypes.TAIL_UP:
+        case TileTypes.TAIL_DOWN:
+        case TileTypes.TAIL_LEFT:
+        case TileTypes.TAIL_RIGHT:
+            return tail;
         default:
-            return "⠀";
+            return background;
+    }
+}
+
+const tileTypeToImageClass = (type) => {
+    switch(type) {
+        case TileTypes.POINT:
+            return "";
+        case TileTypes.HEAD_UP:
+            return "";
+        case TileTypes.HEAD_DOWN:
+            return "rotate180";
+        case TileTypes.HEAD_LEFT:
+            return "rotate270";
+        case TileTypes.HEAD_RIGHT:
+            return "rotate90";
+        case TileTypes.BODY_HORIZONTAL:
+            return "rotate90";
+        case TileTypes.BODY_VERTICAL:
+            return "";
+        case TileTypes.BODY_LEFT_UP:
+            return "rotate180";
+        case TileTypes.BODY_LEFT_DOWN:
+            return "rotate90";
+        case TileTypes.BODY_RIGHT_UP:
+            return "rotate270";
+        case TileTypes.BODY_RIGHT_DOWN:
+            return ""
+        case TileTypes.TAIL_UP:
+            return ""
+        case TileTypes.TAIL_DOWN:
+            return "rotate180"
+        case TileTypes.TAIL_LEFT:
+            return "rotate270"
+        case TileTypes.TAIL_RIGHT:
+            return "rotate90";
+        default:
+            return "";
     }
 }
 
 export default function Tile({type = TileTypes.EMPTY}) {
-    let cellContent = tileTypeToCellContent(type);
     return (
         <td>
-            {cellContent}
+            <img src={tileTypeToImageSrc(type)} className={tileTypeToImageClass(type)} />
         </td>
     )
 }

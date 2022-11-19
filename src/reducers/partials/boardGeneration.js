@@ -68,7 +68,15 @@ const determineBodyPart = (prev, current, next) => {
 }
 
 const determineTail = (prev, tail) => {
-    if (prev.x === tail.x)
-        return TileTypes.TAIL_HORIZONTAL;
-    return TileTypes.TAIL_VERTICAL;
+    const diffX = prev.x - tail.x;
+    const diffY = prev.y - tail.y;
+
+    if (diffX === 0) {
+        if (diffY === 1)
+            return TileTypes.TAIL_RIGHT;
+        return TileTypes.TAIL_LEFT
+    }
+    if (diffX === 1)
+        return TileTypes.TAIL_DOWN;
+    return TileTypes.TAIL_UP;
 }
