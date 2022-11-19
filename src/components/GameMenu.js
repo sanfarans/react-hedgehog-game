@@ -1,6 +1,7 @@
 import { useDispatch } from "react-redux"
 import { setStage } from "../reducers/gameActions";
-import { GameStage } from "../reducers/gameReducer";
+import { GameStage } from "../reducers/utils";
+
 
 export default function GameMenu() {
     const dispatch = useDispatch();

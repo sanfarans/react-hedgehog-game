@@ -1,10 +1,10 @@
 import { useDispatch, useSelector } from 'react-redux'
 import Board from './Board';
 import { useEffect } from 'react';
-import { Direction } from '../reducers/gameReducer';
 import { turn, move, setStage } from '../reducers/gameActions';
-import { GameStage } from '../reducers/gameReducer';
 import GameMenu from './GameMenu';
+import { Direction, GameStage } from '../reducers/utils';
+
 
 export default function GameLogic() {
     const gameStage = useSelector((state) => state.game.gameStage)

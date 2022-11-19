@@ -1,7 +1,8 @@
 import "./Board.css"
 import { useSelector } from "react-redux";
 import Tile from "./Tile";
-import { BOARD_SIZE } from "../reducers/gameReducer";
+import { BOARD_SIZE } from "../reducers/utils";
+
 
 export default function Board() {
     const board = useSelector((state) => state.game.board);
