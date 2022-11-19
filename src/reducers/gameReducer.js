@@ -45,41 +45,76 @@ export const Direction = {
     DOWN: {x: 1, y: 0}
 }
 
-const initialState = () => {
-    const playerHead = generateInitialPlayer();
-    return {
-        'board': generateBoardState(playerHead),
-        'playerHead': playerHead,
-        'facing': Direction.RIGHT,
-        'directionChosen': false
-    }
+export const GameStage = {
+    MENU: 0,
+    PLAY: 1,
+    LOST: 2
 }
 
-const statePostMove = (currentBoard, currentPlayerHead, facing) => {
+const statePostMove = (currentState) => {
+    const currentPlayerHead = currentState.playerHead;
+    const facing = currentState.facing;
+
     let nextX = currentPlayerHead.x + facing.x;
     let nextY = currentPlayerHead.y + facing.y;
+
+    // check if player crashed into the wall
+    if (Math.min(nextX, nextY) < 0 || Math.max(nextX, nextY) >= BOARD_SIZE)
+        return {...currentState, gameStage: GameStage.LOST}
+
+    // update player position
     const playerHead = new PlayerPart(nextX, nextY, currentPlayerHead);
     let playerTail = playerHead;
     while (playerTail.next.next != null)
         playerTail = playerTail.next;
     playerTail.next = null;
+
+    // check if player self crashed
+    let playerPart = playerHead.next;
+    while (playerPart) {
+        if (playerPart.x === playerHead.x && playerPart.y === playerHead.y)
+            return {...currentState, board: generateBoardState(playerHead),
+                    playerHead: playerHead, gameStage: GameStage.LOST}
+        playerPart = playerPart.next
+    }
+
     return {
-        'board': generateBoardState(playerHead),
-        'playerHead': playerHead,
-        'facing': facing,
-        'directionChosen': false
+        ...currentState,
+        board: generateBoardState(playerHead),
+        playerHead: playerHead,
+        directionChosen: false
     }
 }
 
-export default function boardReducer(state = initialState(), action) {
+const getInitialState = () => {
+    const playerHead = generateInitialPlayer();
+    return {
+        board: generateBoardState(playerHead),
+        playerHead: playerHead,
+        facing: Direction.RIGHT,
+        directionChosen: false,
+        gameStage: GameStage.MENU
+    }
+}
+
+export default function gameReducer(state = getInitialState(), action) {
     switch (action.type) {
+        case "game/setStage":
+            switch(action.payload.stage) {
+                case GameStage.MENU:
+                    return getInitialState();
+                case GameStage.PLAY:
+                    return {...getInitialState(), gameStage: GameStage.PLAY}
+                default:
+                    return {...state, gameStage: action.payload.stage}
+            }
         case "board/turn":
             if (state.directionChosen)
                 return state
             state = {...state, facing: action.payload.direction, directionChosen: true}
             return state
         case "board/move":
-            state = statePostMove(state.board, state.playerHead, state.facing)
+            state = statePostMove(state)
             return state
         default:
             return state
