@@ -8,13 +8,14 @@ import { Direction, GameStage } from '../reducers/utils';
 
 export default function GameLogic() {
     const gameStage = useSelector((state) => state.game.gameStage)
+    const speed = useSelector((state) => state.settings.difficulty)
     const dispatch = useDispatch();
 
     useEffect(() => {
         const id = setInterval(() => {
             if (gameStage === GameStage.PLAY)
                 dispatch(move())
-        }, 500);
+        }, speed);
         const onKeyDown = (e) => {
             if (gameStage !== GameStage.PLAY)
                 return
