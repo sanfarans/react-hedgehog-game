@@ -33,7 +33,8 @@ const getInitialState = () => {
         points: 0,
         facing: Direction.RIGHT,
         moveQueue: [],
-        gameStage: GameStage.MENU
+        gameStage: GameStage.MENU,
+        firstMove: false
     }
 }
 
@@ -53,7 +54,7 @@ export default function gameReducer(state = getInitialState(), action) {
                 return state
             let newMoveQueue = state.moveQueue
             newMoveQueue.push(action.payload.direction)
-            state = {...state, moveQueue: newMoveQueue}
+            state = {...state, moveQueue: newMoveQueue, firstMove: true}
             return state
         case "board/move":
             state = statePostMove(state)

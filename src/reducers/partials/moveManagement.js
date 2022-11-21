@@ -5,6 +5,8 @@ import generateBoardState from "./boardGeneration";
 
 
 export default function statePostMove(currentState) {
+    if (!currentState.firstMove)
+        return currentState
     const currentPlayerHead = currentState.playerHead;
     const facing = getNewFacing(currentState.facing, currentState.moveQueue);
     let pointLocation = currentState.pointLocation;
