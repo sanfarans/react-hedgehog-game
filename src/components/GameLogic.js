@@ -1,6 +1,7 @@
+import './GameLogic.css'
 import { useDispatch, useSelector } from 'react-redux'
 import Board from './Board';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { turn, move, setStage } from '../reducers/gameActions';
 import GameMenu from './GameMenu';
 import { Direction, GameStage } from '../reducers/utils';
@@ -19,6 +20,10 @@ export default function GameLogic() {
         const onKeyDown = (e) => {
             if (gameStage !== GameStage.PLAY)
                 return
+            if (e.key.startsWith("Arrow")) {
+                const startModal = document.getElementById("start-modal");
+                startModal.style.display = "none";
+            }
             switch(e.key) {
                 case "ArrowRight":
                     dispatch(turn(Direction.RIGHT))
@@ -52,18 +57,25 @@ export default function GameLogic() {
             return (
                 <div>
                     <Board />
-                    <div>
-                        You Lose!
-                    </div>
-                    <div>
-                        <button onClick={e => dispatch(setStage(GameStage.MENU))}>Menu</button>
-                        <button onClick={e => dispatch(setStage(GameStage.PLAY))}>Restart</button>
+                    <div id="lose-modal">
+                        <div>
+                            You Lose!
+                        </div>
+                        <div>
+                            <button onClick={e => dispatch(setStage(GameStage.MENU))}>Menu</button>
+                            <button onClick={e => dispatch(setStage(GameStage.PLAY))}>Restart</button>
+                        </div>
                     </div>
                 </div>
             )
         default:
             return (
-                <Board />
+                <div>
+                    <div id="start-modal">
+                        <p>Press any arrow key to start</p>
+                    </div>
+                    <Board />
+                </div>
             )
     }
 }

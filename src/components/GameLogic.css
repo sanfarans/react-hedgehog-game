@@ -1,0 +1,31 @@
+#start-modal {
+    position: absolute;
+    left: 45%;
+    top: 55%;
+    width: 10%;
+    background-color: aliceblue;
+    opacity: .8;
+    font-size: 1.4em;
+    font-weight: bold;
+    text-align: center;
+    padding: 1em;
+}
+
+#lose-modal {
+    position: absolute;
+    left: 43%;
+    top: 55%;
+    width: 14%;
+    background-color: aliceblue;
+    opacity: .8;
+    font-size: 1.4em;
+    font-weight: bolder;
+    padding: 1em;
+}
+
+#lose-modal button {
+    padding: 1em;
+    margin: 1em;
+    width: 100px;
+    font-weight: bold;
+}
